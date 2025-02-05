@@ -1,0 +1,4 @@
+/.idea
+/.venv
+ui/__pycache__/main_window.cpython-312.pyc
+processors/__pycache__/camera_processor.cpython-312.pyc
