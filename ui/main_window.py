@@ -1,7 +1,7 @@
 import sys
 
 import cv2
-from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QHBoxLayout
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QTimer
 from processors.camera_processor import CameraHandler
@@ -12,9 +12,10 @@ class CameraApp(QWidget):
     def __init__(self):
         super().__init__()
 
+        self.mask_label = None
         self.video_label = None
         self.processor = None
-        self.initUI()
+        self.init_ui()
         self.camera = CameraHandler()
         self.processor = ImageProcessor()
 
@@ -22,36 +23,36 @@ class CameraApp(QWidget):
         self.timer.timeout.connect(self.update_frame)
         self.timer.start(30)  # every 30 seconds
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle("Camera Web")
 
         self.video_label = QLabel(self)
-        layout = QVBoxLayout()
+        self.mask_label = QLabel(self)
+
+        # Set default empty images to avoid NoneType errors
+        self.video_label.setPixmap(QPixmap())
+        self.mask_label.setPixmap(QPixmap())
+
+        layout = QHBoxLayout()
         layout.addWidget(self.video_label)
+        layout.addWidget(self.mask_label)
         self.setLayout(layout)
 
     def update_frame(self):
-        # return the frame read from the camera, in RGB format
         frame = self.camera.get_frame()
         if frame is not None:
-            processed_frame, mask = self.processor.process_frame(frame)  # Apply the image processing here
-            h, w, ch = processed_frame.shape
-            bytes_per_line = ch * w
-            processed_img = QImage(processed_frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            self.video_label.setPixmap(QPixmap.fromImage(processed_img))
+            processed_frame, mask = self.processor.process_frame(frame)
 
-            # Convert the original frame
+            # Convert the ORIGINAL frame (normal colors)
             h, w, ch = frame.shape
             bytes_per_line = ch * w
-            qimg = QImage(frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            original_qimg = QImage(frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            self.video_label.setPixmap(QPixmap.fromImage(original_qimg))
 
-            # Convert the mask
-            mask_qimg = QImage(mask.data, mask.shape[1], mask.shape[0], mask.strides[0], QImage.Format_Grayscale8)
-
-            # Display both the main and the mask window
-            self.video_label.setPixmap(QPixmap.fromImage(qimg))
-            cv2.imshow("Mask", mask)  # Mask
-            cv2.waitKey(1)
+            # Convert mask to grayscale for display
+            h_m, w_m = mask.shape
+            mask_qimg = QImage(mask.data, w_m, h_m, mask.strides[0], QImage.Format_Grayscale8)
+            self.mask_label.setPixmap(QPixmap.fromImage(mask_qimg))
 
     def closeEvent(self, event):
         self.camera.release()
