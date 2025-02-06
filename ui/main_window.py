@@ -17,7 +17,7 @@ class CameraApp(QWidget):
         self.timer.start(30)  # every 30 seconds
 
     def initUI(self):
-        self.setWindowTitle("Camera Web - PyQt & OpenCV")
+        self.setWindowTitle("Camera Web")
 
         self.video_label = QLabel(self)
         layout = QVBoxLayout()
