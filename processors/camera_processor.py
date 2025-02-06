@@ -2,6 +2,7 @@ import cv2
 
 class CameraHandler:
     def __init__(self):
+        # read frames from the web camera
         self.cap = cv2.VideoCapture(0)
 
     def get_frame(self):
