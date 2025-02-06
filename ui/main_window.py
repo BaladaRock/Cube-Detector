@@ -19,7 +19,7 @@ class CameraApp(QWidget):
         self.timer.start(30)  # Update every 30ms
 
     def init_ui(self):
-        self.setWindowTitle("Camera Web")
+        self.setWindowTitle("Cube processor")
 
         self.video_label = QLabel(self)
         self.mask_label = QLabel(self)
