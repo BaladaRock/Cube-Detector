@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
-from processors.detections.color_ranges import ColorRanges
-from processors.detections.shape_detector import ShapeDetector
+from processors.detectors.color_detectors.color_ranges import ColorRanges
+from processors.detectors.shape_detectors.shape_detector import ShapeDetector
 
 
 class ColorDetector:

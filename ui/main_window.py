@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QTimer
 from processors.camera_processor import CameraHandler
-from processors.detections.color_detector import ColorDetector
+from processors.detectors.color_detectors.color_detector import ColorDetector
+
 
 class CameraApp(QWidget):
     def __init__(self):
@@ -34,8 +35,11 @@ class CameraApp(QWidget):
         if frame is not None:
             processed_frame, mask = self.color_detector.detect_color(frame, color="red")
 
+            if isinstance(processed_frame, tuple):
+                processed_frame, _ = processed_frame  # Extract frame from tuple
+
             # Convert original frame
-            h, w, ch =  processed_frame.shape
+            h, w, ch = processed_frame.shape
             bytes_per_line = ch * w
             processed_qimg = QImage(processed_frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
             self.video_label.setPixmap(QPixmap.fromImage(processed_qimg))

@@ -10,9 +10,9 @@ class ColorRanges:
 
     @staticmethod
     def get_range(color_name):
-        """ Returns the HSV range for a given color. """
+        # Returns the HSV range for a given color.
         ranges = {
             "red": ColorRanges.RED,
-            # TO DO: Add colors for the other faces
+            # TO DO: Add colors to track the other faces
         }
         return ranges.get(color_name, None)
