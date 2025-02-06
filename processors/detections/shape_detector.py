@@ -1,10 +1,10 @@
 import cv2
 
 class ShapeDetector:
-    """ Detects geometric shapes in a given mask. """
+    # Detects geometric shapes in a given mask.
 
-    def detect_squares(self, mask):
-        """ Detects squares in the given binary mask. """
+    def detect_squares(self, frame, mask):
+        # Finds squares inside a binary mask and draws them on the original frame.
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         squares = []
 
@@ -18,4 +18,8 @@ class ShapeDetector:
                 if 0.8 < aspect_ratio < 1.2:  # Nearly square
                     squares.append((x, y, w, h))
 
-        return squares
+        # Draw detected squares on the frame
+        for (x, y, w, h) in squares:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Green box
+
+        return frame

@@ -1,11 +1,14 @@
 import cv2
 import numpy as np
 from processors.detections.color_ranges import ColorRanges
+from processors.detections.shape_detector import ShapeDetector
+
 
 class ColorDetector:
     # Handles color detection using HSV filtering.
 
     def __init__(self):
+        self.shape_detector = ShapeDetector()
         self.frame_counter = 0  # Counter variable used to control print frequency
 
     def detect_color(self, frame, color="red"):
@@ -26,8 +29,8 @@ class ColorDetector:
         mask2 = cv2.inRange(hsv, lower2, upper2)
         mask = cv2.bitwise_or(mask1, mask2)
 
-        # Apply mask to the frame
-        result = cv2.bitwise_and(frame, frame, mask=mask)
+        # Send mask to ShapeDetector
+        frame_with_squares = self.shape_detector.detect_squares(frame, mask)
 
         # Draw measurement rectangle
         h, w, _ = frame.shape
@@ -48,4 +51,4 @@ class ColorDetector:
 
             print(f"HSV Center Avg: H={avg_hue:.1f}, S={avg_saturation:.1f}, V={avg_value:.1f}")
 
-        return frame, mask
+        return frame_with_squares, mask

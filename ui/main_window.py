@@ -10,7 +10,7 @@ class CameraApp(QWidget):
 
         self.mask_label = None
         self.video_label = None
-        self.initUI()
+        self.init_ui()
         self.camera = CameraHandler()
         self.color_detector = ColorDetector()
 
@@ -18,7 +18,7 @@ class CameraApp(QWidget):
         self.timer.timeout.connect(self.update_frame)
         self.timer.start(30)  # Update every 30ms
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle("Camera Web")
 
         self.video_label = QLabel(self)
@@ -35,10 +35,10 @@ class CameraApp(QWidget):
             processed_frame, mask = self.color_detector.detect_color(frame, color="red")
 
             # Convert original frame
-            h, w, ch = frame.shape
+            h, w, ch =  processed_frame.shape
             bytes_per_line = ch * w
-            original_qimg = QImage(frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            self.video_label.setPixmap(QPixmap.fromImage(original_qimg))
+            processed_qimg = QImage(processed_frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            self.video_label.setPixmap(QPixmap.fromImage(processed_qimg))
 
             # Convert mask to grayscale
             h_m, w_m = mask.shape
