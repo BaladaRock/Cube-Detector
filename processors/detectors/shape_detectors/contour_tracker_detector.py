@@ -20,6 +20,7 @@ class ContourBasedTracker:
                 best_match = None
                 min_distance = float("inf")
 
+                # Euclidian distance
                 for prev_x, prev_y, prev_w, prev_h in self.tracking_helper.prev_squares:
                     distance = np.linalg.norm(np.array([x, y]) - np.array([prev_x, prev_y]))
                     if distance < min_distance:

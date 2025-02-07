@@ -26,6 +26,7 @@ class TrackingHelper:
         squares = []
 
         for cnt in contours:
+            # Douglas - Peucker algorithm to detect the corners of a form
             approx = cv2.approxPolyDP(cnt, 0.04 * cv2.arcLength(cnt, True), True)
 
             if len(approx) == 4:  # Looking for quadrilaterals

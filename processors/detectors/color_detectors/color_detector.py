@@ -35,7 +35,7 @@ class ColorDetector:
         # Draw measurement rectangle
         h, w, _ = frame.shape
         center_x, center_y = w // 2, h // 2
-        roi_size = 10
+        roi_size = 50
         cv2.rectangle(frame, (center_x - roi_size // 2, center_y - roi_size // 2),
                       (center_x + roi_size // 2, center_y + roi_size // 2), (255, 0, 0), 2)
 

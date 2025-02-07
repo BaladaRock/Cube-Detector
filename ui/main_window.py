@@ -33,7 +33,7 @@ class CameraApp(QWidget):
     def update_frame(self):
         frame = self.camera.get_frame()
         if frame is not None:
-            processed_frame, mask = self.color_detector.detect_color(frame, color="red")
+            processed_frame, mask = self.color_detector. detect_color(frame, color="red")
 
             if isinstance(processed_frame, tuple):
                 processed_frame, _ = processed_frame  # Extract frame from tuple
