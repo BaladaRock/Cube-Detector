@@ -27,7 +27,6 @@ class OpticalFlowTracker:
         self.tracking_helper.store_squares(squares)
         self.prev_gray = gray  # Save the previous grayscale frame
 
-        # Draw detected shapes
         frame = self.tracking_helper.draw_shapes(frame, squares, tracking_lines)
 
         return frame, squares
