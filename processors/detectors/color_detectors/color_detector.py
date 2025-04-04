@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 from processors.detectors.shape_detectors.shape_detector import ShapeDetector
+from processors.detectors.shape_detectors.grid_helper import GridHelper
 from processors.detectors.color_detectors.color_ranges import ColorRanges
 
 
@@ -26,27 +27,25 @@ class ColorDetector:
         mask2 = cv2.inRange(hsv, lower2, upper2)
         mask = cv2.bitwise_or(mask1, mask2)
 
-        result = self.shape_detector.detect_squares(frame, mask)
-        if isinstance(result, tuple):
-            frame_with_squares = result[0]
-        else:
-            frame_with_squares = result
+        frame_with_squares, squares = self.shape_detector.detect_squares(frame, mask)
+
+        # Build and draw the 3x3 grid
+        # print(f"[DEBUG] Squares detected: {len(squares)}")
+        grid = GridHelper.form_grid(squares)
+        if grid:
+            GridHelper.draw_grid(frame_with_squares, grid)
 
         self.draw_center_rectangle(frame_with_squares)
+
         return frame_with_squares, mask
 
     def load_color_range(self, color):
         data = self.load_json_ranges()
         if color in data:
-            hsv_data = data[color]
-            # Validate structure
-            if all(k in hsv_data for k in ("lower1", "upper1", "lower2", "upper2")):
-                return hsv_data
-            else:
-                print(f"---Warning--- Malformed HSV data for '{color}' in JSON. Using fallback.")
+            return data[color]
 
-        # fallback if the JSON is not in correct format at startup
         print(f"---Info--- '{color}' not found in JSON. Using default values from color_ranges.py")
+
         fallback = ColorRanges.get_range(color)
         if fallback is None:
             print(f"---Error--- No fallback HSV values found for '{color}'")
