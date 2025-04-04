@@ -1,5 +1,6 @@
 class ColorRanges:
     # Predefined HSV intervals for Rubik's Cube colors.
+    # We will use this in case the interactive UI color detection has failed
 
     @staticmethod
     def get_range(color):
@@ -42,4 +43,10 @@ class ColorRanges:
             }
         }
 
-        return ranges.get(color, None)
+        # If color is not found, return a fully black mask
+        return ranges.get(color, {
+            "lower1": [0, 0, 0],
+            "upper1": [0, 0, 0],
+            "lower2": [0, 0, 0],
+            "upper2": [0, 0, 0]
+        })

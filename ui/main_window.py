@@ -59,20 +59,20 @@ class CameraApp(QWidget):
 
     def update_frame(self):
         original_frame = self.camera.get_frame()
-        if original_frame is not None:
-            combined_mask = None
-            frame_to_display = original_frame.copy()
+        if original_frame is None:
+            print("---Warning--- No frame received from camera.")
+            return
 
-            for color in self.colors:
-                processed_frame, mask = self.color_detector.detect_color(original_frame.copy(), color=color)
-                if isinstance(processed_frame, tuple):
-                    processed_frame, _ = processed_frame
+        combined_mask = None
+        frame_to_display = original_frame.copy()
 
-                frame_to_display = processed_frame
-                if combined_mask is None:
-                    combined_mask = mask
-                else:
-                    combined_mask = cv2.bitwise_or(combined_mask, mask)
+        for color in self.colors:
+            processed_frame, mask = self.color_detector.detect_color(original_frame, color=color)
+            if isinstance(processed_frame, tuple):
+                processed_frame, _ = processed_frame
+
+            frame_to_display = processed_frame
+            combined_mask = mask if combined_mask is None else cv2.bitwise_or(combined_mask, mask)
 
             # Convert processed frame to QImage
             h, w, ch = frame_to_display.shape
@@ -84,6 +84,9 @@ class CameraApp(QWidget):
             h_m, w_m = combined_mask.shape
             mask_qimg = QImage(combined_mask.data, w_m, h_m, combined_mask.strides[0], QImage.Format_Grayscale8)
             self.mask_label.setPixmap(QPixmap.fromImage(mask_qimg))
+        else:
+            print("---Warning--- No frame received from camera!")
+            return
 
     def set_current_color(self, color):
         self.current_color = color
