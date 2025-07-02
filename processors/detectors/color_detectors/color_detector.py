@@ -44,11 +44,11 @@ class ColorDetector:
         if color in data:
             return data[color]
 
-        print(f"---Info--- '{color}' not found in JSON. Using default values from color_ranges.py")
+        print(f"Info- '{color}' not found in JSON. Using default values from color_ranges.py")
 
         fallback = ColorRanges.get_range(color)
         if fallback is None:
-            print(f"---Error--- No fallback HSV values found for '{color}'")
+            print(f"Error- No fallback HSV values found for '{color}'")
             return {
                 "lower1": [0, 0, 0],
                 "upper1": [0, 0, 0],
@@ -64,7 +64,7 @@ class ColorDetector:
                 with open(self.json_path, "r") as f:
                     return json.load(f)
             except Exception as e:
-                print(f"---Warning--- Could not load JSON: {e}")
+                print(f"Warning- Could not load JSON: {e}")
         return {}
 
     def draw_center_rectangle(self, frame):

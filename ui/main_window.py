@@ -60,7 +60,7 @@ class CameraApp(QWidget):
     def update_frame(self):
         original_frame = self.camera.get_frame()
         if original_frame is None:
-            # print("---Warning--- No frame received from camera.")
+            # print("Warning - No frame received from camera.")
             return
 
         combined_mask = None
@@ -85,7 +85,7 @@ class CameraApp(QWidget):
             mask_qimg = QImage(combined_mask.data, w_m, h_m, combined_mask.strides[0], QImage.Format_Grayscale8)
             self.mask_label.setPixmap(QPixmap.fromImage(mask_qimg))
         else:
-            # print("---Warning--- No frame received from camera!")
+            # print("Warning - No frame received from camera!")
             return
 
     def set_current_color(self, color):
